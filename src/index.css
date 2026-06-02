@@ -1,0 +1,196 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+}
+
+:root {
+  --radius: 0.875rem;
+
+  /* ═══ OFFICIAL J-USE BRAND PALETTE ═══════════════════════════════ */
+  /* Primary palette (from J-USE Brand Board)                          */
+  --juse-green:    #009144;  /* Environmental Green — PRIMARY brand   */
+  --juse-brown:    #885533;  /* Earth Brown — supporting / grounding  */
+  --juse-blue:     #017FD5;  /* Climate Blue — institutional, water   */
+  --juse-orange:   #F7A716;  /* Solar Orange — CTAs, highlights       */
+  --juse-charcoal: #181616;  /* Deep Charcoal — body text             */
+
+  /* Extended tints                                                    */
+  --juse-green-soft: #E6F4EC;
+  --juse-blue-soft:  #E5F3FC;
+  --juse-gold-soft:  #FFF3D8;
+  --juse-beige:      #F3E8D8;
+  --juse-paper:      #FFFFFF;
+
+  /* Aliases preserved from the prior build (mapped to brand colours): */
+  /* Anywhere code references --juse-navy, treat it as Climate Blue   */
+  /* (institutional / Commercial layer / structural). --juse-teal is  */
+  /* a darker tint of Climate Blue used for sub-headings/labels.       */
+  --juse-navy: var(--juse-blue);
+  --juse-teal: #015C9C;       /* darker climate blue tint              */
+
+  /* ═══ Semantic tokens consumed by Tailwind + UI primitives ════════ */
+  --background: var(--juse-beige);     /* warm beige page bg per brand */
+  --foreground: var(--juse-charcoal);
+  --card: var(--juse-paper);
+  --card-foreground: var(--juse-charcoal);
+  --popover: var(--juse-paper);
+  --popover-foreground: var(--juse-charcoal);
+  --primary: var(--juse-green);        /* env-green primary buttons    */
+  --primary-foreground: #ffffff;
+  --secondary: #EBE0CC;                /* darker beige for sec buttons */
+  --secondary-foreground: var(--juse-charcoal);
+  --muted: #F0E5D3;
+  --muted-foreground: #685A48;
+  --accent: var(--juse-orange);        /* solar orange CTA accent      */
+  --accent-foreground: #ffffff;
+  --destructive: #B73E2E;
+  --destructive-foreground: #ffffff;
+  --border: #D9CDB7;
+  --input: #D9CDB7;
+  --ring: var(--juse-green);
+}
+
+@layer base {
+  * { @apply border-border; }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'DM Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: -0.01em;
+  }
+  .font-mono { font-family: 'DM Mono', monospace; }
+}
+
+@layer components {
+  /* Sticky progress stepper at top */
+  .step-dot { transition: all 0.3s ease; }
+  .step-dot.active   { background: var(--juse-orange);   color: white; }
+  .step-dot.completed{ background: var(--juse-green);    color: white; }
+  .step-dot.idle     { background: #E0D3BB;              color: #685A48; }
+
+  /* Knode dual-layer canvas block */
+  .canvas-block {
+    background: var(--juse-paper);
+    border: 1px solid #D9CDB7;
+    border-radius: 0.875rem;
+    transition: all 0.2s ease;
+  }
+  .canvas-block:hover { box-shadow: 0 4px 16px rgba(0,145,68,0.08); }
+  .canvas-block.filled  { border-color: var(--juse-orange); }
+  .canvas-block.complete{ border-color: var(--juse-green); }
+
+  /* Pathway choice cards */
+  .pathway-card {
+    background: var(--juse-paper);
+    border: 2px solid #D9CDB7;
+    border-radius: 1rem;
+    transition: all 0.25s ease;
+    cursor: pointer;
+  }
+  .pathway-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,145,68,0.14); }
+  .pathway-card.selected {
+    border-color: var(--juse-green);
+    background: linear-gradient(180deg, var(--juse-green-soft) 0%, var(--juse-paper) 100%);
+  }
+
+  /* Knode-style honest trap callout */
+  .knode-trap {
+    background: var(--juse-gold-soft);
+    border-left: 4px solid var(--juse-orange);
+    border-radius: 0.5rem;
+    padding: 1rem 1.25rem;
+  }
+
+  /* Rubric reference inline label */
+  .rubric-ref {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--juse-blue);
+    background: var(--juse-blue-soft);
+    padding: 0.125rem 0.5rem;
+    border-radius: 999px;
+    border: 1px solid #BFDFF6;
+  }
+
+  /* Sustainability test traffic lights */
+  .traffic-light { width: 1.25rem; height: 1.25rem; border-radius: 999px; display: inline-block; }
+  .traffic-light.green { background: var(--juse-green);  box-shadow: 0 0 0 4px rgba(0,145,68,0.12); }
+  .traffic-light.amber { background: var(--juse-orange); box-shadow: 0 0 0 4px rgba(247,167,22,0.14); }
+  .traffic-light.red   { background: var(--destructive); box-shadow: 0 0 0 4px rgba(183,62,46,0.14); }
+
+  /* KPI tiles */
+  .kpi-tile {
+    background: var(--juse-paper);
+    border: 1px solid #D9CDB7;
+    border-radius: 0.875rem;
+    padding: 1rem 1.25rem;
+  }
+  .kpi-tile-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--juse-blue);
+    font-weight: 600;
+  }
+  .kpi-tile-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--juse-charcoal);
+    margin-top: 0.25rem;
+  }
+
+  /* Hero banner — env-green per brand guidance */
+  .juse-hero {
+    background: var(--juse-green);
+    color: var(--juse-paper);
+  }
+
+  /* Soft brand sections */
+  .juse-section-green { background: var(--juse-green-soft); }
+  .juse-section-blue  { background: var(--juse-blue-soft); }
+  .juse-section-gold  { background: var(--juse-gold-soft); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp 0.35s ease forwards; }
+
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(247,167,22,0.4); }
+    50%       { box-shadow: 0 0 0 8px rgba(247,167,22,0); }
+  }
+  .pulse-glow { animation: pulseGlow 1.6s ease-in-out infinite; }
+}
