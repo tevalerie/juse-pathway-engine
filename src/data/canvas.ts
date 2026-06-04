@@ -768,41 +768,41 @@ export const CANVAS_BLOCKS: CanvasBlock[] = [
   },
 ];
 
-// Knode-style honest warnings — surface contextually based on pathway
+// Plain-English warnings — friendly hints for applicants, no rubric jargon.
 export const KNODE_TRAPS: KnodeTrap[] = [
   {
     id: "anchor-mirage",
     pathways: ["blended"],
-    title: "⚠ The Anchor Partner Mirage",
+    title: "⚠ Watch out: named Anchor Partner without a signed agreement",
     body:
-      "If you named an Anchor Partner but don't have a written Memorandum of Understanding (MoU) or Letter of Intent (LoI) yet, you're at score-down risk for Rubric D3. Add 'secure Anchor Partner MoU' to your Stage 6 commitments before the Full Technical Proposal (FTP) deadline.",
+      "Did you list an Anchor Partner without anything in writing? Names alone don't count. Get at least a Letter of Intent — and ideally a Memorandum of Understanding — before you submit. A handshake won't hold up under review.",
   },
   {
     id: "adopting-agency-mirage",
     pathways: ["public"],
-    title: "⚠ The Adopting Agency Mirage",
+    title: "⚠ Watch out: a verbal promise from the agency isn't enough",
     body:
-      "Without a signed adoption commitment from the public agency, your post-grant sustainability is unverified. Rubric D1 (6 points) scores this directly. Add 'secure agency MoU with multi-year budget line' to Stage 6.",
+      "You've named a Parish Council or government agency that will adopt the project. Good — but have they actually committed in writing? Without a signed agreement and a budget line they intend to honour, your post-grant sustainability is unverified. Lock it down before you submit.",
   },
   {
     id: "single-channel-trap",
     pathways: ["revenue"],
-    title: "⚠ The Single-Channel Trap",
+    title: "⚠ Watch out: one customer is risky",
     body:
-      "If all your revenue depends on one buyer or offtaker, your sustainability fails the concentration-risk test under Rubric D2 (Full Technical Proposal stage). Diversify to at least two named buyers, or document a credible fallback buyer.",
+      "If your project depends on just one buyer, you collapse the day they walk away. Reviewers see this as concentration risk. Name at least one more buyer — or document a credible fallback — before the proposal stage.",
   },
   {
     id: "in-kind-undervalued",
     pathways: ["blended", "public"],
-    title: "⚠ The In-Kind Mirage",
+    title: "⚠ Watch out: community labour has a real cash value",
     body:
-      "Community volunteer labour is not free. The J-USE Budget Template requires in-kind contribution to be valued at replacement cost. Estimate: average hourly rate × hours per volunteer × number of volunteers. Don't enter 'volunteers will help' without a number.",
+      "Volunteer hours are not free — they're worth what you would have paid someone else to do the work. Put a number on it: hours per volunteer × hourly rate × number of volunteers. 'The community will help' isn't a contribution until you can value it.",
   },
   {
     id: "iucn-skipped",
     pathways: ["revenue", "blended", "public"],
-    title: "⚠ The IUCN Skipped Trap",
+    title: "⚠ Watch out: don't skip the IUCN environmental check",
     body:
-      "If your Key Activities block doesn't mention IUCN NbS self-assessment, Rubric A5 (3 points) is at risk. The 5 EFJ-adopted IUCN criteria (mitigation, biodiversity, governance, trade-offs, grant compliance) must appear in your activities.",
+      "Your project needs to be assessed against five environmental standards: mitigation, biodiversity, governance, trade-offs, and grant compliance. Mention the IUCN self-assessment in your Key Activities — if you skip it, your environmental credibility is unsupported.",
   },
 ];
