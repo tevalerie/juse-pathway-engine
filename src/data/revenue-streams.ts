@@ -18,9 +18,16 @@ export const REVENUE_STREAMS: RevenueStream[] = [
   {
     id: "public-agency-budget",
     label: "Public agency budget allocation post-grant",
-    hint: "Named agency budget commitment. Document the MoU + line item.",
+    hint: "Named public agency (parish council, ministry, NEPA, NWA, etc.) committing a multi-year budget line. Document the MoU + line item. ONE option for the post-grant anchor.",
     type: "cash",
-    applicability: { revenue: "hidden", blended: "optional", public: "mandatory" },
+    applicability: { revenue: "hidden", blended: "optional", public: "optional" },
+  },
+  {
+    id: "foundation-sponsor",
+    label: "Foundation, philanthropic, or corporate sponsor commitment",
+    hint: "Named charitable / philanthropic foundation OR corporate sponsor committing recurring funding post-grant (e.g. CSR / ESG mandated giving, family-foundation endowment, corporate trust). Another valid post-grant anchor for the Public Good pathway. Document via signed MoU or Letter of Intent.",
+    type: "cash",
+    applicability: { revenue: "hidden", blended: "optional", public: "optional" },
   },
   {
     id: "in-kind",

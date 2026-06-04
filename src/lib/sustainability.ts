@@ -57,7 +57,7 @@ export function evalTestsForState(s: EngineState): TestEvaluation {
       t2 = hasStar && hasMou ? "green" : hasStar ? "amber" : "red";
     }
     if (s.pathway === "public") {
-      const hasAdopting = /adopting|parish council|nepa|nwa|rada|ministry|municipal|agency/i.test(partners);
+      const hasAdopting = /adopting|parish council|nepa|nwa|nwc|rada|ministry|municipal|agency|foundation|philanthrop|corporate sponsor|csr|trust fund|endowment/i.test(partners);
       const hasStewarding = /steward|community trust|cbo|cooperative|association|community body/i.test(partners);
       const hasMou = /mou|loi|signed|commitment letter|memorandum/i.test(partners);
       const has2 = hasAdopting && hasStewarding;
