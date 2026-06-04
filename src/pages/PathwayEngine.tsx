@@ -412,7 +412,7 @@ function Stage3Canvas({ state, set, next, back }: { state: EngineState; set: (u:
 
                   {/* Impact layer */}
                   <div className="rounded-lg border-2 border-[color:var(--juse-green)]/30 bg-[color:var(--juse-green)]/[0.03] p-4">
-                    <Label className="text-[color:var(--juse-green)]">Impact ({pw.impactLayerCode})</Label>
+                    <Label className="text-[color:var(--juse-green)]">Impact Value Proposition ({pw.impactLayerCode})</Label>
                     <p className="text-sm font-medium mt-1.5">{prompts.impact.question}</p>
                     <ul className="text-xs text-muted-foreground mt-2 space-y-0.5">
                       {prompts.impact.bullets.map((bl, i) => (

@@ -49,7 +49,7 @@ export function PrintCanvas({ state }: { state: EngineState }) {
 
       {/* Subtitle */}
       <div className="pc-subtitle">
-        Knode-adapted dual-layer Business Model Canvas — {pw.topLayerName} ({pw.topLayerCode}) + Impact ({pw.impactLayerCode})
+        Knode-adapted dual-layer Business Model Canvas — {pw.topLayerName} ({pw.topLayerCode}) + Impact Value Proposition ({pw.impactLayerCode})
       </div>
 
       {/* Top row: 5 columns with internal splits */}
@@ -210,7 +210,7 @@ function Block({
         <div className="pc-layer-content">{topContent || <span className="pc-empty">—</span>}</div>
       </div>
       <div className="pc-layer pc-impact">
-        <div className="pc-layer-label">Impact (IVP)</div>
+        <div className="pc-layer-label">Impact Value Proposition (IVP)</div>
         <div className="pc-layer-content">{impactContent || <span className="pc-empty">—</span>}</div>
       </div>
     </div>
