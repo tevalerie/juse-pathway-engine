@@ -514,6 +514,22 @@ function Stage4Inflows({ state, set, next, back }: { state: EngineState; set: (u
               <span className="text-muted-foreground"> per year</span>
             </p>
           )}
+
+          {/* Why O&M coverage matters — central to every SFM */}
+          <div className="mt-4 rounded-md bg-[color:var(--juse-green-soft)] border-l-4 border-[color:var(--juse-green)] p-3 text-sm">
+            <div className="font-semibold text-[color:var(--juse-green)] mb-1">
+              💡 Why Operations &amp; Maintenance (O&amp;M) Coverage matters
+            </div>
+            <p className="text-foreground/85 leading-relaxed">
+              <strong>This is the heart of every Sustainable Financing Mechanism (SFM).</strong> If your post-grant
+              inflows don't cover your operating costs, the project collapses the day the grant ends — no matter how
+              good the climate impact, no matter how loved by the community. <strong>Coverage ≥ 100%</strong> means the
+              project sustains itself into perpetuity · <strong>80–99%</strong> means the model is fixable but at
+              grant-exit risk · <strong>below 80%</strong> means structural rework needed before the Full Technical
+              Proposal stage. The whole purpose of a Civic SFM is to make this number ≥ 100% <em>without</em> relying on
+              fresh grants.
+            </p>
+          </div>
         </CardContent>
       </Card>
 
