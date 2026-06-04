@@ -174,17 +174,17 @@ function Stage1Welcome({ state, set, next }: { state: EngineState; set: (u: Part
               id="orgName"
               value={state.orgName}
               onChange={(e) => set({ orgName: e.target.value })}
-              placeholder="e.g. Eggpress Farms Ltd"
+              placeholder="e.g. Cane Valley Apiary Cooperative"
               className="mt-2"
             />
           </div>
           <div>
-            <Label htmlFor="refNumber">EOI reference number (if you have one)</Label>
+            <Label htmlFor="refNumber">Expression of Interest reference number (if you have one)</Label>
             <Input
               id="refNumber"
               value={state.refNumber}
               onChange={(e) => set({ refNumber: e.target.value })}
-              placeholder="e.g. JUSE-2026-000049"
+              placeholder="e.g. JUSE-TRAIN-001"
               className="mt-2 font-mono"
             />
           </div>
