@@ -6,7 +6,10 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function parseNum(v: string): number {
-  const n = parseFloat(String(v).replace(/[,$\s]/g, ""));
+  // Strip everything that isn't a digit or decimal point — robust to "JMD"
+  // prefixes, "M"/"K" suffixes, parentheses, spaces, etc.
+  const stripped = String(v).replace(/[^\d.]/g, "");
+  const n = parseFloat(stripped);
   return isNaN(n) ? 0 : n;
 }
 

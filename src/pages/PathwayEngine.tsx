@@ -494,8 +494,8 @@ function Stage4Inflows({ state, set, next, back }: { state: EngineState; set: (u
       {/* O&M cost input */}
       <Card className="mb-6">
         <CardContent className="pt-6">
-          <Label htmlFor="omCost">Total annual O&amp;M cost (JMD)</Label>
-          <p className="text-xs text-muted-foreground mt-1">From your Canvas Block 8 — Cost Structure. Sum of all annual operating + maintenance costs.</p>
+          <Label htmlFor="omCost">Total annual Operations and Maintenance (O&amp;M) cost (JMD)</Label>
+          <p className="text-xs text-muted-foreground mt-1">From your Canvas Block 9 — Cost Structure. Sum of all annual operating + maintenance costs.</p>
           <Input
             id="omCost"
             type="text"
@@ -505,6 +505,15 @@ function Stage4Inflows({ state, set, next, back }: { state: EngineState; set: (u
             placeholder="e.g. 4,200,000"
             className="mt-2 max-w-xs font-mono text-lg"
           />
+          {state.omAnnualCost.trim().length > 0 && (
+            <p className="mt-2 text-sm">
+              <span className="text-muted-foreground">Parsed as: </span>
+              <span className="font-mono font-semibold text-[color:var(--juse-green)]">
+                {fmtJMD(parseNum(state.omAnnualCost))}
+              </span>
+              <span className="text-muted-foreground"> per year</span>
+            </p>
+          )}
         </CardContent>
       </Card>
 
