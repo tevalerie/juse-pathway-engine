@@ -19,8 +19,8 @@ export const PATHWAYS: Pathway[] = [
     fullName: "Blended Pathway",
     tagline: "My NbCS has two channels — paying and public.",
     paragraph:
-      "Some customers pay. Other beneficiaries don't. An anchor partner — public agency, foundation, or corporate sponsor — stabilises the public-good portion.",
-    topLayerName: "Commercial + Anchor",
+      "Some customers pay. Other beneficiaries don't. An Anchor Partner — a named foundation, corporate sponsor, public agency, or institutional backer that commits cash or in-kind support — closes the funding gap on the public-good portion.",
+    topLayerName: "Commercial + Anchor Partner",
     topLayerCode: "CVP",
     impactLayerCode: "IVP",
     emoji: "🪴",
@@ -31,7 +31,7 @@ export const PATHWAYS: Pathway[] = [
     fullName: "Community Benefits / Public Good Pathway",
     tagline: "My NbCS delivers a public benefit.",
     paragraph:
-      "No customer pays. A named public agency adopts it into a budget line, and a named community body stewards it day-to-day. In-kind contribution, carbon/PES credits, and follow-on grants close the gap.",
+      "No customer pays. A named public agency adopts it into a budget line, and a named community body stewards it day-to-day. In-kind contribution, carbon credits, Payments for Ecosystem Services (PES), and follow-on grants close the gap.",
     topLayerName: "Stewardship & Adoption",
     topLayerCode: "AVP",
     impactLayerCode: "IVP",

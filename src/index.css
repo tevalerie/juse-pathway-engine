@@ -177,6 +177,31 @@
     color: var(--juse-paper);
   }
 
+  /* Welcome-stage partnership logo lockup — sits directly on page background */
+  .welcome-logo-band {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .welcome-logo {
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    max-height: 180px;
+    margin: 0;
+    padding: 0;
+    display: block;
+  }
+  @media (min-width: 768px) {
+    .welcome-logo-band {
+      margin-top: -0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .welcome-logo { max-height: 240px; }
+  }
+
   /* Soft brand sections */
   .juse-section-green { background: var(--juse-green-soft); }
   .juse-section-blue  { background: var(--juse-blue-soft); }
@@ -193,4 +218,386 @@
     50%       { box-shadow: 0 0 0 8px rgba(247,167,22,0); }
   }
   .pulse-glow { animation: pulseGlow 1.6s ease-in-out infinite; }
+
+  /* ═══ Landscape one-page Business Model Canvas (PrintCanvas) ════════ */
+  /* Hidden on screen; shown only when printing.                          */
+  .print-canvas,
+  .print-summary {
+    display: none;
+  }
+
+  /* Logo lockup band — shared by both print artefacts                   */
+  /* Source PNG is 8000×4500 (16:9). Width-based sizing keeps the lockup */
+  /* readable; max-height caps the vertical footprint per page budget.   */
+  .pc-logo-band,
+  .ps-logo-band {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 0 5pt;
+    padding-bottom: 5pt;
+    border-bottom: 0.5pt solid #d4d4d4;
+  }
+  .pc-logo-img {
+    /* Landscape canvas — source PNG is 8000×4500 (16:9 aspect).         */
+    /* max-height is the binding constraint; width auto-scales.          */
+    /* 95pt tall → ~169pt wide (~60mm × 34mm). Readable lockup.          */
+    max-height: 95pt;
+    max-width: 70%;
+    width: auto;
+    height: auto;
+  }
+  .ps-logo-img {
+    /* Portrait summary — more vertical room available.                  */
+    /* 135pt tall → ~240pt wide (~85mm × 48mm). Readable lockup.         */
+    max-height: 135pt;
+    max-width: 85%;
+    width: auto;
+    height: auto;
+  }
+
+  /* PrintCanvas internal layout (rendered in print only) */
+  .pc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 3px solid var(--juse-green);
+    padding-bottom: 8pt;
+    margin-bottom: 6pt;
+  }
+  .pc-brand {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    color: var(--juse-green);
+    font-size: 14pt;
+    letter-spacing: -0.01em;
+  }
+  .pc-pathway {
+    font-size: 10pt;
+    color: var(--juse-charcoal);
+    font-weight: 600;
+    margin-top: 1pt;
+  }
+  .pc-header-right { text-align: right; }
+  .pc-org {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 12pt;
+    color: var(--juse-charcoal);
+  }
+  .pc-ref {
+    font-family: 'DM Mono', monospace;
+    font-size: 8pt;
+    color: var(--juse-blue);
+    margin-top: 1pt;
+  }
+  .pc-subtitle {
+    font-size: 8pt;
+    color: var(--juse-blue);
+    font-style: italic;
+    margin-bottom: 6pt;
+  }
+  .pc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    gap: 4pt;
+  }
+  .pc-grid.pc-bottom {
+    grid-template-columns: 2fr 3fr;
+    margin-top: 4pt;
+  }
+  .pc-col-stack {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 4pt;
+  }
+  .pc-block {
+    border: 1pt solid #888;
+    border-radius: 4pt;
+    padding: 4pt;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .pc-block.pc-highlight {
+    border: 1.5pt solid var(--juse-green);
+    background: rgba(0, 145, 68, 0.025);
+  }
+  .pc-block.pc-half { min-height: 0; }
+  .pc-block.pc-wide { min-height: 0; }
+  .pc-block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 0.5pt solid #ccc;
+    padding-bottom: 2pt;
+    margin-bottom: 3pt;
+  }
+  .pc-block-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    color: var(--juse-charcoal);
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .pc-block-rubric {
+    font-family: 'DM Mono', monospace;
+    font-size: 6pt;
+    color: var(--juse-blue);
+    background: var(--juse-blue-soft);
+    padding: 1pt 4pt;
+    border-radius: 6pt;
+  }
+  .pc-layer {
+    flex: 1;
+    padding: 3pt;
+    border-radius: 3pt;
+    margin-bottom: 2pt;
+    overflow: hidden;
+  }
+  .pc-layer.pc-top {
+    background: rgba(1, 127, 213, 0.06);
+    border-left: 2pt solid var(--juse-blue);
+  }
+  .pc-layer.pc-impact {
+    background: rgba(0, 145, 68, 0.06);
+    border-left: 2pt solid var(--juse-green);
+    margin-bottom: 0;
+  }
+  .pc-layer-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 6pt;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--juse-charcoal);
+    opacity: 0.7;
+    margin-bottom: 2pt;
+  }
+  .pc-top .pc-layer-label { color: var(--juse-blue); }
+  .pc-impact .pc-layer-label { color: var(--juse-green); }
+  .pc-layer-content {
+    font-size: 7.5pt;
+    color: var(--juse-charcoal);
+    line-height: 1.3;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  .pc-empty { color: #bbb; font-style: italic; }
+  .pc-footer {
+    margin-top: 6pt;
+    padding-top: 4pt;
+    border-top: 0.5pt solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    font-size: 6.5pt;
+    color: #666;
+  }
+  .pc-footer-right {
+    font-family: 'DM Mono', monospace;
+    color: var(--juse-blue);
+    white-space: nowrap;
+    margin-left: 12pt;
+  }
 }
+
+/* ═══ PRINT STYLES ════════════════════════════════════════════════════ */
+/* Two distinct print artefacts, selected by a body class set at print-time.
+   The @page rule (size + orientation) is INJECTED VIA JavaScript at print
+   time — NOT declared in this stylesheet. See PathwayEngine.tsx printPdf().
+   Why: Chrome's print engine treats named-page CSS as a page-break trigger,
+   creating phantom blank pages. JS-injection avoids this entirely.        */
+
+@media print {
+  /* Reset html + body so there's no implicit page bleed */
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  /* Live app: completely hidden, no layout footprint */
+  .print-hide,
+  .print-hide * { display: none !important; }
+
+  /* Canvas-mode visibility */
+  body.print-mode-canvas .print-canvas {
+    display: block !important;
+    width: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white;
+    color: var(--juse-charcoal);
+  }
+  body.print-mode-canvas .print-summary { display: none !important; }
+
+  /* Summary-mode visibility */
+  body.print-mode-summary .print-summary {
+    display: block !important;
+    width: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white;
+    color: var(--juse-charcoal);
+    font-family: 'DM Sans', sans-serif;
+  }
+  body.print-mode-summary .print-canvas { display: none !important; }
+}
+
+/* ═══ Portrait completion summary (PrintSummary) styles ═════════════════ */
+/* Sized to fill an A4 portrait page comfortably without overflow         */
+.ps-header {
+  text-align: center;
+  margin-bottom: 12pt;
+  padding-bottom: 7pt;
+  border-bottom: 2pt solid var(--juse-green);
+}
+.ps-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 8pt;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--juse-orange);
+  font-weight: 700;
+  margin-bottom: 3pt;
+}
+.ps-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20pt;
+  font-weight: 800;
+  color: var(--juse-charcoal);
+  margin: 0 0 3pt;
+  line-height: 1.1;
+}
+.ps-ref {
+  font-family: 'DM Mono', monospace;
+  font-size: 9pt;
+  color: var(--juse-blue);
+  margin-bottom: 4pt;
+}
+.ps-pathway {
+  font-size: 12pt;
+  font-weight: 600;
+  color: var(--juse-green);
+  display: inline-flex;
+  align-items: center;
+  gap: 5pt;
+}
+.ps-emoji { font-size: 16pt; }
+
+.ps-tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 6pt;
+  margin-bottom: 12pt;
+}
+.ps-tile {
+  border: 1pt solid #ccc;
+  border-radius: 4pt;
+  padding: 6pt 8pt;
+}
+.ps-tile-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 7pt;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--juse-blue);
+  font-weight: 600;
+  margin-bottom: 2pt;
+}
+.ps-tile-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13pt;
+  font-weight: 700;
+  color: var(--juse-charcoal);
+}
+.ps-tile-value.ps-green { color: var(--juse-green); }
+.ps-tile-value.ps-amber { color: #B8851A; }
+.ps-tile-value.ps-red   { color: var(--destructive); }
+
+.ps-section {
+  margin-bottom: 10pt;
+  page-break-inside: avoid;
+}
+.ps-h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11pt;
+  font-weight: 700;
+  color: var(--juse-green);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin: 0 0 6pt;
+  border-bottom: 0.5pt solid #aaa;
+  padding-bottom: 2pt;
+}
+.ps-tests {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 9.5pt;
+  line-height: 1.4;
+}
+.ps-tests li {
+  display: flex;
+  gap: 7pt;
+  align-items: flex-start;
+  margin-bottom: 6pt;
+}
+.ps-light {
+  display: inline-block;
+  width: 11pt;
+  height: 11pt;
+  border-radius: 999px;
+  flex-shrink: 0;
+  margin-top: 2pt;
+}
+.ps-light.ps-green { background: var(--juse-green); }
+.ps-light.ps-amber { background: var(--juse-orange); }
+.ps-light.ps-red   { background: var(--destructive); }
+
+.ps-commitments {
+  font-size: 9.5pt;
+  line-height: 1.4;
+  padding-left: 16pt;
+  margin: 0;
+}
+.ps-commitments li { margin-bottom: 6pt; }
+.ps-commitment-by,
+.ps-commitment-action {
+  font-size: 8.5pt;
+  color: #555;
+  margin-top: 2pt;
+}
+.ps-empty-section { font-size: 9.5pt; color: #999; font-style: italic; }
+.ps-reflection {
+  font-size: 10pt;
+  font-style: italic;
+  color: #444;
+  margin: 0;
+  padding-left: 8pt;
+  border-left: 2pt solid var(--juse-green);
+  line-height: 1.4;
+}
+.ps-checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 9.5pt;
+  line-height: 1.4;
+}
+.ps-checklist li { margin-bottom: 3pt; }
+.ps-footer {
+  margin-top: 14pt;
+  padding-top: 5pt;
+  border-top: 0.5pt solid #aaa;
+  font-size: 8pt;
+  color: #555;
+  text-align: center;
+}
+

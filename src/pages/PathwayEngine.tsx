@@ -25,6 +25,11 @@ import { PATHWAYS, findPathway } from "@/data/pathways";
 import { CANVAS_BLOCKS, KNODE_TRAPS } from "@/data/canvas";
 import { REVENUE_STREAMS, COMMITMENT_SUGGESTIONS } from "@/data/revenue-streams";
 import { EMPTY_STATE, type EngineState, type PathwayId } from "@/data/types";
+import { GlossaryButton, GlossaryModal } from "@/components/GlossaryModal";
+import { RubricButton, RubricModal } from "@/components/RubricModal";
+import { PrintCanvas } from "@/components/PrintCanvas";
+import { PrintSummary } from "@/components/PrintSummary";
+import { evalTestsForState, type Light } from "@/lib/sustainability";
 
 const STORAGE_KEY = "juse-pathway-engine-v1";
 
@@ -57,62 +62,12 @@ function saveState(s: EngineState) {
   }
 }
 
-// ─── Sustainability test computation ──────────────────────────────────────────
-type Light = "green" | "amber" | "red";
-function evalTests(s: EngineState): { t1: Light; t2: Light; t3: Light; totalInflows: number; cash: number; inKind: number; omCoverage: number } {
-  const omAnnual = parseNum(s.omAnnualCost);
-  const streams = Object.values(s.revenue);
-  let cash = 0;
-  let inKind = 0;
-  streams.forEach((r) => {
-    const c = parseNum(r.cash);
-    const k = parseNum(r.inKind);
-    // normalise to annual
-    let mult = 1;
-    if (r.freq === "monthly") mult = 12;
-    else if (r.freq === "one-off") mult = 1 / 3; // amortise over 3 years
-    cash += c * mult;
-    inKind += k * mult;
-  });
-  const totalInflows = cash + inKind;
-  const omCoverage = omAnnual > 0 ? (totalInflows / omAnnual) * 100 : 0;
-
-  // T1: O&M coverage
-  let t1: Light = "red";
-  if (omCoverage >= 100) t1 = "green";
-  else if (omCoverage >= 80) t1 = "amber";
-
-  // T2: Pathway-specific anchor presence — look for keywords in canvas
-  let t2: Light = "red";
-  if (s.pathway) {
-    const partners = (s.canvas["key-partners"]?.topLayer || "").toLowerCase();
-    if (s.pathway === "revenue") {
-      // Need ≥2 named offtakers — heuristic: at least one comma or two "+"
-      const namedCount = partners.split(/[,;+]/).filter((p) => p.trim().length > 4).length;
-      t2 = namedCount >= 2 ? "green" : namedCount >= 1 ? "amber" : "red";
-    }
-    if (s.pathway === "blended") {
-      const hasStar = partners.includes("★") || partners.includes("anchor");
-      const hasMou = /mou|loi|signed|commitment letter/i.test(partners);
-      t2 = hasStar && hasMou ? "green" : hasStar ? "amber" : "red";
-    }
-    if (s.pathway === "public") {
-      const hasAdopting = /adopting|kasamc|parish council|nepa|nwa|rada|ministry|municipal|agency/i.test(partners);
-      const hasStewarding = /steward|community trust|cbo|cooperative|association|community body/i.test(partners);
-      const hasMou = /mou|loi|signed|commitment letter/i.test(partners);
-      const has2 = hasAdopting && hasStewarding;
-      t2 = has2 && hasMou ? "green" : has2 ? "amber" : "red";
-    }
-  }
-
-  // T3: Cumulative 3-yr cashflow positive
-  const cumulativeNet = totalInflows * 3 - omAnnual * 3;
-  let t3: Light = "red";
-  if (cumulativeNet > 0 && totalInflows >= omAnnual) t3 = "green";
-  else if (cumulativeNet > -omAnnual) t3 = "amber";
-
-  return { t1, t2, t3, totalInflows, cash, inKind, omCoverage };
-}
+// ─── Sustainability test computation (re-exported from shared lib) ────────────
+const evalTests = evalTestsForState;
+// Keep the Light type alive locally for TestCard prop typing.
+type _LightAlias = Light;
+const _LIGHT_KEEPALIVE: _LightAlias = "green";
+void _LIGHT_KEEPALIVE;
 
 // ─── Top progress stepper ─────────────────────────────────────────────────────
 function ProgressStepper({ stage, onJump }: { stage: number; onJump: (n: number) => void }) {
@@ -187,7 +142,16 @@ function RubricRef({ refTxt, note }: { refTxt: string; note: string }) {
 function Stage1Welcome({ state, set, next }: { state: EngineState; set: (u: Partial<EngineState>) => void; next: () => void }) {
   const ready = state.orgName.trim().length >= 2;
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10 fade-up">
+    <div className="mx-auto max-w-3xl px-4 pt-4 pb-10 fade-up">
+      {/* Partnership logo lockup — In partnership with Canada · EFJ · J-USE */}
+      <div className="welcome-logo-band">
+        <img
+          src={`${import.meta.env.BASE_URL}logo-lockup.png`}
+          alt="J-USE — In partnership with Canada and the Environmental Foundation of Jamaica"
+          className="welcome-logo"
+        />
+      </div>
+
       <div className="juse-hero rounded-2xl p-8 md:p-12 shadow-xl">
         <div className="flex items-center gap-2 text-xs uppercase tracking-wider opacity-80">
           <Leaf className="size-4" /> J-USE Pathway Engine
@@ -866,7 +830,36 @@ function Stage7Complete({ state, set, back, restart }: { state: EngineState; set
     URL.revokeObjectURL(url);
   };
 
-  const printPdf = () => window.print();
+  const printPdf = (mode: "canvas" | "summary") => {
+    // Remove any leftover orientation style + mode class from a prior print
+    document.getElementById("juse-print-orient")?.remove();
+    document.body.classList.remove("print-mode-canvas", "print-mode-summary");
+
+    // Inject a single @page rule at print time — avoids Chrome's
+    // named-page ghost-blank-page bug entirely.
+    const styleEl = document.createElement("style");
+    styleEl.id = "juse-print-orient";
+    styleEl.media = "print";
+    styleEl.textContent =
+      mode === "canvas"
+        ? "@page { size: A4 landscape; margin: 6mm; }"
+        : "@page { size: A4 portrait; margin: 10mm 12mm; }";
+    document.head.appendChild(styleEl);
+
+    // Apply mode class so the right component is visible
+    document.body.classList.add(`print-mode-${mode}`);
+
+    // Clean up after the print dialog closes (or is cancelled)
+    const cleanup = () => {
+      document.body.classList.remove("print-mode-canvas", "print-mode-summary");
+      document.getElementById("juse-print-orient")?.remove();
+      window.removeEventListener("afterprint", cleanup);
+    };
+    window.addEventListener("afterprint", cleanup);
+
+    // Defer one tick so the style + class apply before the print dialog opens
+    setTimeout(() => window.print(), 100);
+  };
 
   const shareWhatsApp = () => {
     const text = `J-USE Pathway Engine — ${state.orgName}\n` +
@@ -892,8 +885,9 @@ function Stage7Complete({ state, set, back, restart }: { state: EngineState; set
           {state.orgName || "You"}, you've mapped your pathway.
         </h1>
         <p className="text-muted-foreground mt-3 max-w-xl mx-auto">
-          You've built a Knode-adapted dual-layer canvas, sized your revenue / sustainability inflows, and made
-          commitments. That is more financial clarity than most applicants have at FTP submission.
+          You have built an Alex Osterwalder and Knode-adapted dual-layer business model canvas, sized your revenue /
+          sustainability inflows, and made commitments. That is more financial clarity than most applicants have at
+          Full Technical Proposal (FTP) submission.
         </p>
       </div>
 
@@ -908,11 +902,11 @@ function Stage7Complete({ state, set, back, restart }: { state: EngineState; set
         <div className="text-xs uppercase tracking-wider text-[color:var(--juse-teal)] font-semibold mb-3">Before your FTP submission</div>
         <ul className="space-y-2 text-sm">
           {[
-            "Validate your anchor partner / adopting agency commitment in writing",
-            "Complete your Risk Register draft (Annex A of the FTP Schedule)",
+            "Validate your Anchor Partner / Adopting Agency commitment in writing (Memorandum of Understanding or Letter of Intent)",
+            "Complete your Risk Register draft (Annex A of the Full Technical Proposal Schedule)",
             "Re-read your Pathway Canvas — flag any block with one-word answers",
-            "Quantify your in-kind contributions before next session",
-            "Identify one peer project on the J-USE 48 list with a similar pathway and compare",
+            "Quantify your in-kind contributions at replacement cost (volunteer-hours × hourly-rate × number of volunteers)",
+            "Revisit the worked example for your pathway and identify what makes it score-positive",
           ].map((item, i) => (
             <li key={i} className="flex gap-2">
               <span className="text-[color:var(--juse-orange)] font-bold">▸</span>
@@ -929,8 +923,11 @@ function Stage7Complete({ state, set, back, restart }: { state: EngineState; set
         <Button variant="outline" onClick={() => set({ stage: 6 })}><PencilLine /> Edit Commitments</Button>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-2">
-        <Button variant="accent" onClick={printPdf}><Download /> Download Canvas (PDF)</Button>
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-2">
+        <Button variant="accent" onClick={() => printPdf("canvas")}><Download /> Download Canvas (Landscape PDF)</Button>
+        <Button variant="default" onClick={() => printPdf("summary")}><Download /> Download Summary (Portrait PDF)</Button>
+      </div>
+      <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2">
         <Button variant="outline" onClick={exportCsv}><FileText /> Export Revenue Model (CSV)</Button>
         <Button variant="success" onClick={shareWhatsApp}><Share2 /> Share via WhatsApp</Button>
       </div>
@@ -951,6 +948,8 @@ function Stage7Complete({ state, set, back, restart }: { state: EngineState; set
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function PathwayEngine() {
   const [state, setState] = useState<EngineState>(() => loadState());
+  const [glossaryOpen, setGlossaryOpen] = useState(false);
+  const [rubricOpen, setRubricOpen] = useState(false);
 
   // autosave
   useEffect(() => {
@@ -969,16 +968,27 @@ export default function PathwayEngine() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <ProgressStepper stage={state.stage} onJump={jump} />
-      {state.stage === 1 && <Stage1Welcome state={state} set={set} next={next} />}
-      {state.stage === 2 && <Stage2Pathway state={state} set={set} next={next} back={back} />}
-      {state.stage === 3 && <Stage3Canvas state={state} set={set} next={next} back={back} />}
-      {state.stage === 4 && <Stage4Inflows state={state} set={set} next={next} back={back} />}
-      {state.stage === 5 && <Stage5Sustainability state={state} next={next} back={back} />}
-      {state.stage === 6 && <Stage6Commitments state={state} set={set} next={next} back={back} />}
-      {state.stage === 7 && <Stage7Complete state={state} set={set} back={back} restart={restart} />}
-      <SavedPill />
-    </div>
+    <>
+      {/* Live app — hidden on print */}
+      <div className="min-h-screen bg-background print-hide">
+        <ProgressStepper stage={state.stage} onJump={jump} />
+        {state.stage === 1 && <Stage1Welcome state={state} set={set} next={next} />}
+        {state.stage === 2 && <Stage2Pathway state={state} set={set} next={next} back={back} />}
+        {state.stage === 3 && <Stage3Canvas state={state} set={set} next={next} back={back} />}
+        {state.stage === 4 && <Stage4Inflows state={state} set={set} next={next} back={back} />}
+        {state.stage === 5 && <Stage5Sustainability state={state} next={next} back={back} />}
+        {state.stage === 6 && <Stage6Commitments state={state} set={set} next={next} back={back} />}
+        {state.stage === 7 && <Stage7Complete state={state} set={set} back={back} restart={restart} />}
+        <SavedPill />
+        <GlossaryButton onClick={() => setGlossaryOpen(true)} />
+        <GlossaryModal open={glossaryOpen} onClose={() => setGlossaryOpen(false)} />
+        <RubricButton onClick={() => setRubricOpen(true)} />
+        <RubricModal open={rubricOpen} onClose={() => setRubricOpen(false)} />
+      </div>
+
+      {/* Print-only artefacts — visibility controlled by body class via printPdf() */}
+      <PrintCanvas state={state} />
+      <PrintSummary state={state} />
+    </>
   );
 }

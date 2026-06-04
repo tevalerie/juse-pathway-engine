@@ -10,8 +10,8 @@ export const REVENUE_STREAMS: RevenueStream[] = [
   },
   {
     id: "anchor-cross-subsidy",
-    label: "Anchor partner cross-subsidy / sponsorship",
-    hint: "Named anchor partner contribution. Document the MoU.",
+    label: "Anchor Partner contribution (cash sponsorship or in-kind backing)",
+    hint: "Cash, grant, or resource commitment from a credible third party (foundation, corporate sponsor, or institutional backer) that covers the public-good portion. Mandatory because — by definition — a Blended pathway has no other structural source of funds for the non-commercial half of the project. Document via signed Memorandum of Understanding (MoU) or Letter of Intent (LoI).",
     type: "cash",
     applicability: { revenue: "hidden", blended: "mandatory", public: "hidden" },
   },
@@ -39,7 +39,7 @@ export const REVENUE_STREAMS: RevenueStream[] = [
   {
     id: "grants-followon",
     label: "Programmed grants follow-on",
-    hint: "GCF, GAC, IDB, EFJ next-cycle, etc.",
+    hint: "GCF, IDB, Adaptation Fund, EFJ next-cycle, etc.",
     type: "cash",
     applicability: { revenue: "optional", blended: "optional", public: "optional" },
   },
