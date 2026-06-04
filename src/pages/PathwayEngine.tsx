@@ -502,7 +502,7 @@ function Stage4Inflows({ state, set, next, back }: { state: EngineState; set: (u
             inputMode="numeric"
             value={state.omAnnualCost}
             onChange={(e) => set({ omAnnualCost: e.target.value })}
-            placeholder="e.g. 4,200,000"
+            placeholder="Type your annual cost in JMD"
             className="mt-2 max-w-xs font-mono text-lg"
           />
           {state.omAnnualCost.trim().length > 0 && (
