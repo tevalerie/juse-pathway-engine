@@ -98,11 +98,21 @@ Each canvas block carries an inline rubric reference pill (e.g., "Rubric A2 (8 p
 | 2. Key Activities | A2 Adaptation Logic Chain | 8 |
 | 3. Value Proposition | A1 + A4 NbCS Intervention + Concept Note Quality | 9 |
 | 4. Customer / Stewardship Relationship | C4 Vulnerability-to-Benefits | 5 |
-| 5. Customer / Beneficiary Segment | C1 + C2 Vulnerability + Disaggregation | 9 |
+| 5. Customer / Beneficiary Segment | C1 + C2 Vulnerability + Disaggregation **+ partial C3 (Gender Analysis — analytical core)** | 9 |
 | 6. Key Resources | D1 Sustainability Model | 6 |
-| 7. Channels | C3 Gender Analysis | 6 |
+| 7. Channels | **C3 Gender Analysis (operational core — gender-responsive delivery)** | 6 |
 | 8. Cost Structure | E2 + E3 Budget Realism + Admin ≤10% | 7 |
 | 9. Revenue Streams / Inflows | E4 + E5 Co-Financing + Bonus | 8 |
+
+### Note on C3 Gender Analysis (6 pts) — distributed across two blocks
+
+C3 has three scoring pillars:
+
+1. **Differential climate impacts** — scored from the Block 1 (Customer / Beneficiary Segment) disaggregation data, supported by the FTP Gender Analysis narrative document
+2. **Participation barriers** — scored from Block 1's vulnerable-group identification, plus the FTP narrative
+3. **Gender-responsive strategies** — scored from Block 3 Channels (operational design: when channels reach women, in what language, in what time-poverty context, with what safety assumptions)
+
+Blocks 1 and 3 therefore carry C3 jointly. Reviewers reading the canvas + FTP narrative together score across both blocks.
 
 A complete dual-layer canvas pre-populates ~62 of 100 rubric points before the applicant even drafts the formal FTP narrative.
 
