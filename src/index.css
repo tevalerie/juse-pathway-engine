@@ -300,10 +300,11 @@
   .pc-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    grid-auto-rows: 395pt; /* page-1 budget: fits under logo + header */
+    grid-auto-rows: 370pt; /* page-1 budget: fits under ~162pt of header   */
     gap: 4pt;
-    break-inside: avoid;
-    page-break-inside: avoid;
+    /* NOTE: do NOT set break-inside: avoid here — it makes Chrome push the
+       entire grid to page 2 if it thinks total height might exceed page 1
+       by even 1pt. Per-block break-inside: avoid below is sufficient.    */
   }
   /* Page 2: Cost + Revenue blocks size to content (no min/max forcing)     */
   /* Triggered by page-break-before on .pc-page2-header below.              */
@@ -409,7 +410,10 @@
     background: var(--juse-blue-soft);
     padding: 1pt 4pt;
     border-radius: 6pt;
+    white-space: nowrap; /* keep "Rubric A1 + A4 (9 pts)" on one line       */
+    flex-shrink: 0;       /* don't let the label crowd it out               */
   }
+  .pc-block-label { flex-shrink: 1; min-width: 0; }
   .pc-layer {
     flex: 1;
     padding: 3pt;
