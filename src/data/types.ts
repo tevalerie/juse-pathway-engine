@@ -18,11 +18,21 @@ export type CanvasBlockPrompt = {
   placeholder: string;
 };
 
+// Per-block character budgets — calibrated so each layer comfortably fits its
+// rendered cell on the printed Canvas without forcing a font shrink. Used by:
+//   (a) live char counter shown beneath each Stage-2 textarea (amber at 80%,
+//       red at 100%)
+//   (b) useOverflowFit hook as a hint for which blocks to measure first
+// Numbers are LOWER for half-height blocks (KA/KR/CR/Ch) and HIGHER for full-
+// height columns (KP/VP/CS) and the page-2 financial blocks.
+export type CharBudget = { topLayer: number; impact: number };
+
 export type CanvasBlock = {
   id: string;
   label: string; // formal Osterwalder block label
   rubricRef: string; // e.g. "Rubric D3 (4 pts)"
   rubricNote: string; // longer description shown on hover
+  charBudget: CharBudget; // soft target for each layer (see CharBudget comment)
   prompts: Record<PathwayId, { topLayer: CanvasBlockPrompt; impact: CanvasBlockPrompt }>;
 };
 

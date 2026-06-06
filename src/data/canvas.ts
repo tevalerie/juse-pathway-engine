@@ -31,6 +31,7 @@ export const CANVAS_BLOCKS: CanvasBlock[] = [
     id: "customer-beneficiary",
     label: "Customer / Beneficiary Segment",
     rubricRef: "Rubric C1 + C2 (9 pts)",
+    charBudget: { topLayer: 320, impact: 360 },
     rubricNote:
       "Vulnerability Dimensions plus Beneficiary Disaggregation — multiple groups identified plus disaggregated numbers. Establish baseline demographics + initial cross-subsidy target here.",
     prompts: {
@@ -112,6 +113,7 @@ export const CANVAS_BLOCKS: CanvasBlock[] = [
     id: "value-proposition",
     label: "Value Proposition",
     rubricRef: "Rubric A1 + A4 (9 pts)",
+    charBudget: { topLayer: 420, impact: 380 },
     rubricNote:
       "NbCS Intervention Selection + Concept Note Quality. Align commercial saleable benefit + Anchor Partner strategic interest + climate / co-benefits given to the community.",
     prompts: {
@@ -194,6 +196,7 @@ export const CANVAS_BLOCKS: CanvasBlock[] = [
     id: "channels",
     label: "Channels",
     rubricRef: "Rubric C3 (6 pts)",
+    charBudget: { topLayer: 260, impact: 240 },
     rubricNote:
       "Gender Analysis — channels reach gender-differentiated participants and barriers are addressed. Map separate commercial sales funnels + community distribution pathways.",
     prompts: {
@@ -272,6 +275,7 @@ export const CANVAS_BLOCKS: CanvasBlock[] = [
     id: "customer-stewardship",
     label: "Customer / Stewardship Relationship",
     rubricRef: "Rubric C4 (5 pts)",
+    charBudget: { topLayer: 260, impact: 280 },
     rubricNote:
       "Vulnerability-to-Benefits Link — clear mechanism for how benefits reach the vulnerable. Define your reporting cadence for the Anchor Partner and your co-management framework with the community.",
     prompts: {
@@ -352,6 +356,7 @@ export const CANVAS_BLOCKS: CanvasBlock[] = [
     id: "revenue-inflows",
     label: "Revenue Streams / Sustainability Inflows",
     rubricRef: "Rubric E4 + E5 (8 pts)",
+    charBudget: { topLayer: 480, impact: 380 },
     rubricNote:
       "Co-Financing and sustainability inflows — disclosed sources, named amounts, confidence rating. Lock in commercial sales, anchor sponsorships, and mandatory community in-kind contributions.",
     prompts: {
@@ -436,6 +441,7 @@ export const CANVAS_BLOCKS: CanvasBlock[] = [
     id: "key-resources",
     label: "Key Resources",
     rubricRef: "Rubric D1 (6 pts)",
+    charBudget: { topLayer: 280, impact: 260 },
     rubricNote:
       "Sustainability Model — land tenure, technical resources, brand, Monitoring and Evaluation (M&E) systems. Inventory your physical assets, technical NbCS expertise, and signed legal MoUs.",
     prompts: {
@@ -521,6 +527,7 @@ export const CANVAS_BLOCKS: CanvasBlock[] = [
     id: "key-activities",
     label: "Key Activities",
     rubricRef: "Rubric A2 (8 pts)",
+    charBudget: { topLayer: 300, impact: 380 },
     rubricNote:
       "Adaptation Logic Chain — both the biophysical pathway (how ecosystem services change) and the beneficiary pathway (how communities experience reduced climate risk) clearly explained. Detail dual-channel operations, cross-subsidy accounting, MRV protocols, and GBV safeguards.",
     prompts: {
@@ -608,6 +615,7 @@ export const CANVAS_BLOCKS: CanvasBlock[] = [
     id: "key-partners",
     label: "Key Partners",
     rubricRef: "Rubric D3 (4 pts)",
+    charBudget: { topLayer: 400, impact: 340 },
     rubricNote:
       "Partnership and Scaling — named partners with defined roles plus a realistic scaling pathway. Name your specific Anchor Partner, CBOs, technical advisors, and institutional funders.",
     prompts: {
@@ -688,6 +696,7 @@ export const CANVAS_BLOCKS: CanvasBlock[] = [
     id: "cost-structure",
     label: "Cost Structure",
     rubricRef: "Rubric E2 + E3 (7 pts)",
+    charBudget: { topLayer: 420, impact: 340 },
     rubricNote:
       "Budget Realism and Administrative Costs ≤10% — line-item budget plus admin tagged separately. Finalise tagged percentage cost split and verify administrative costs remain ≤10%.",
     prompts: {

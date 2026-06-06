@@ -28,6 +28,7 @@ import { EMPTY_STATE, type EngineState, type PathwayId } from "@/data/types";
 import { GlossaryButton, GlossaryModal } from "@/components/GlossaryModal";
 import { RubricButton, RubricModal } from "@/components/RubricModal";
 import { PrintCanvas } from "@/components/PrintCanvas";
+import { applyOverflowFit, restoreOverflowFit } from "@/lib/useOverflowFit";
 import { PrintSummary } from "@/components/PrintSummary";
 import { evalTestsForState, type Light } from "@/lib/sustainability";
 
@@ -309,6 +310,31 @@ function Stage2Pathway({ state, set, next, back }: { state: EngineState; set: (u
   );
 }
 
+// Live character budget pill shown beneath each Stage-3 textarea.
+// Soft target only — the budget is calibrated per block in canvas.ts so the
+// printed Canvas fits without auto-shrink. Under 80% reads neutral; 80-99%
+// amber ("getting tight"); 100%+ red ("Canvas auto-shrinks font at print").
+// The text is intentionally honest: people can keep typing past 100% — the
+// useOverflowFit hook will save them — but they're shown the cliff.
+function CharBudget({ value, budget }: { value: string; budget: number }) {
+  const n = (value || "").trim().length;
+  const pct = budget > 0 ? n / budget : 0;
+  const tone =
+    pct >= 1 ? "text-rose-700 bg-rose-50 border-rose-200" :
+    pct >= 0.8 ? "text-amber-700 bg-amber-50 border-amber-200" :
+    "text-muted-foreground bg-slate-50 border-slate-200";
+  const hint =
+    pct >= 1 ? "auto-shrinks at print" :
+    pct >= 0.8 ? "getting tight" :
+    "fits comfortably";
+  return (
+    <div className={`mt-1.5 text-[10px] flex items-center justify-between border rounded px-1.5 py-0.5 ${tone}`}>
+      <span className="font-mono">{n} / {budget} chars</span>
+      <span className="italic">{hint}</span>
+    </div>
+  );
+}
+
 function DiagnosticQ({ q, v, onChange }: { q: string; v: boolean | undefined; onChange: (v: boolean) => void }) {
   return (
     <div className="flex items-start gap-4">
@@ -408,6 +434,7 @@ function Stage3Canvas({ state, set, next, back }: { state: EngineState; set: (u:
                       placeholder={prompts.topLayer.placeholder}
                       className="mt-3 min-h-[100px]"
                     />
+                    <CharBudget value={data.topLayer} budget={b.charBudget.topLayer} />
                   </div>
 
                   {/* Impact layer */}
@@ -428,6 +455,7 @@ function Stage3Canvas({ state, set, next, back }: { state: EngineState; set: (u:
                       placeholder={prompts.impact.placeholder}
                       className="mt-3 min-h-[100px]"
                     />
+                    <CharBudget value={data.impact} budget={b.charBudget.impact} />
                   </div>
                 </div>
               </CardContent>
@@ -874,16 +902,29 @@ function Stage7Complete({ state, set, back, restart }: { state: EngineState; set
     // Apply mode class so the right component is visible
     document.body.classList.add(`print-mode-${mode}`);
 
+    // Canvas mode only — measure overflowing layer-content nodes and step
+    // their font-size down before opening the print dialog. The measurement
+    // works because @media print is now active for the .print-canvas root.
+    // See useOverflowFit.ts for the strategy + rationale.
+    let snapshots: ReturnType<typeof applyOverflowFit> = [];
+    if (mode === "canvas") {
+      // One reflow tick so the print stylesheet has fully applied
+      requestAnimationFrame(() => {
+        snapshots = applyOverflowFit(document);
+      });
+    }
+
     // Clean up after the print dialog closes (or is cancelled)
     const cleanup = () => {
       document.body.classList.remove("print-mode-canvas", "print-mode-summary");
       document.getElementById("juse-print-orient")?.remove();
+      if (snapshots.length) restoreOverflowFit(snapshots);
       window.removeEventListener("afterprint", cleanup);
     };
     window.addEventListener("afterprint", cleanup);
 
     // Defer one tick so the style + class apply before the print dialog opens
-    setTimeout(() => window.print(), 100);
+    setTimeout(() => window.print(), 150);
   };
 
   const shareWhatsApp = () => {

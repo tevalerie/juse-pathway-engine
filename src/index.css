@@ -300,16 +300,25 @@
   .pc-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-auto-rows: 395pt; /* page-1 budget: fits under logo + header */
     gap: 4pt;
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
+  /* Page 2: Cost + Revenue blocks size to content (no min/max forcing)     */
+  /* Triggered by page-break-before on .pc-page2-header below.              */
   .pc-grid.pc-bottom {
     grid-template-columns: 2fr 3fr;
-    margin-top: 4pt;
+    grid-auto-rows: auto;
+    margin-top: 0;
+    break-after: avoid;
+    page-break-after: avoid;
   }
   .pc-col-stack {
     display: grid;
     grid-template-rows: 1fr 1fr;
     gap: 4pt;
+    min-height: 0;
   }
   .pc-block {
     border: 1pt solid #888;
@@ -320,6 +329,56 @@
     background: white;
     min-height: 0;
     overflow: hidden;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  /* Page 2 blocks: NO forced height — content sizes naturally, no clipping */
+  .pc-grid.pc-bottom .pc-block {
+    min-height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+  /* Page 2 reads at a larger comfortable size (no 5-block competition)     */
+  .pc-grid.pc-bottom .pc-block-label  { font-size: 9pt; }
+  .pc-grid.pc-bottom .pc-block-rubric { font-size: 7pt; }
+  .pc-grid.pc-bottom .pc-layer-label  { font-size: 7pt; }
+  .pc-grid.pc-bottom .pc-layer-content {
+    font-size: 8.5pt;
+    line-height: 1.4;
+  }
+
+  /* ─── Page 2 header band ────────────────────────────────────────────── */
+  /* This is the page-break trigger. .pc-grid above sticks to page 1; this
+     header forces page 2 and brings the Cost/Revenue grid + footer with it. */
+  .pc-page2-header {
+    break-before: page;
+    page-break-before: always;
+    break-after: avoid;
+    page-break-after: avoid;
+    padding-top: 0;
+  }
+  .pc-logo-band-compact {
+    margin: 0 0 2pt !important;
+    padding-bottom: 2pt !important;
+  }
+  .pc-logo-img-compact {
+    max-height: 70pt !important; /* page-2 logo smaller to give blocks room */
+  }
+  .pc-page2-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    color: var(--juse-green);
+    font-size: 13pt;
+    border-bottom: 2pt solid var(--juse-green);
+    padding-bottom: 4pt;
+    margin-bottom: 6pt;
+    letter-spacing: -0.01em;
+  }
+  .pc-page2-subtitle {
+    font-size: 8pt;
+    color: var(--juse-blue);
+    font-style: italic;
+    margin-bottom: 8pt;
   }
   .pc-block.pc-highlight {
     border: 1.5pt solid var(--juse-green);
@@ -388,14 +447,16 @@
   }
   .pc-empty { color: #bbb; font-style: italic; }
   .pc-footer {
-    margin-top: 6pt;
-    padding-top: 4pt;
+    margin-top: 3pt;
+    padding-top: 2pt;
     border-top: 0.5pt solid #ccc;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
     font-size: 6.5pt;
     color: #666;
+    break-before: avoid;
+    page-break-before: avoid;
   }
   .pc-footer-right {
     font-family: 'DM Mono', monospace;
