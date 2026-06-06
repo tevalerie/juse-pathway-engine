@@ -54,7 +54,7 @@ export function PrintCanvas({ state }: { state: EngineState }) {
       {/* Header */}
       <div className="pc-header">
         <div className="pc-header-left">
-          <div className="pc-brand">J-USE Pathway Engine — Dual-Layer Business Model Canvas</div>
+          <div className="pc-brand">J-USE Pathway Engine — NbCS Dual-Layer Business Model Canvas</div>
           <div className="pc-pathway">{pw.fullName}</div>
         </div>
         <div className="pc-header-right">
@@ -67,7 +67,7 @@ export function PrintCanvas({ state }: { state: EngineState }) {
 
       {/* Subtitle */}
       <div className="pc-subtitle">
-        Knode-adapted dual-layer Business Model Canvas — {pw.topLayerName} ({pw.topLayerCode}) + Impact Value Proposition ({pw.impactLayerCode})
+        Adapted by the SFM Team for NbCS from Burkett's Knode Social Enterprise Business Model Canvas — {pw.topLayerName} ({pw.topLayerCode}) + Impact Value Proposition ({pw.impactLayerCode})
       </div>
 
       {/* Top row: 5 columns with internal splits */}
