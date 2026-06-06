@@ -67,7 +67,7 @@ export function PrintCanvas({ state }: { state: EngineState }) {
 
       {/* Subtitle */}
       <div className="pc-subtitle">
-        Adapted by the SFM Team for NbCS from Burkett's Knode Social Enterprise Business Model Canvas — {pw.topLayerName} ({pw.topLayerCode}) + Impact Value Proposition ({pw.impactLayerCode})
+        Adapted by the T. Valerie Onu, member of the J-USE SFM Team for NbCS from Burkett's Knode Social Enterprise Business Model Canvas — {pw.topLayerName} ({pw.topLayerCode}) + Impact Value Proposition ({pw.impactLayerCode})
       </div>
 
       {/* Top row: 5 columns with internal splits */}
