@@ -976,19 +976,23 @@ function Stage7Complete({ state, set, back, restart }: { state: EngineState; set
     setTimeout(() => window.print(), 150);
   };
 
-  // Editable Word (.docx) export of the populated Canvas. The docx library is
-  // ~200 kB so it loads lazily — first click pays a small one-time cost.
-  const [docxBusy, setDocxBusy] = useState(false);
-  const downloadDocx = async () => {
-    setDocxBusy(true);
+  // Word (.docx) exports — two flavours of the populated Canvas:
+  //   EDITABLE — portrait, sequential. Best for copying text into FTP sections.
+  //   VISUAL   — landscape, 5-column Knode grid. Matches the printed PDF look.
+  // The docx library is ~200 kB so it loads lazily — first click pays a small
+  // one-time cost; subsequent clicks are instant.
+  const [docxBusy, setDocxBusy] = useState<"editable" | "visual" | null>(null);
+  const downloadDocx = async (flavour: "editable" | "visual") => {
+    setDocxBusy(flavour);
     try {
-      const { downloadCanvasDocx } = await import("@/lib/buildDocx");
-      await downloadCanvasDocx(state);
+      const mod = await import("@/lib/buildDocx");
+      if (flavour === "editable") await mod.downloadCanvasDocxEditable(state);
+      else await mod.downloadCanvasDocxVisual(state);
     } catch (err) {
-      console.error("Canvas .docx export failed:", err);
+      console.error(`Canvas .docx (${flavour}) export failed:`, err);
       window.alert("Sorry — the Word export failed. Please try again, or use the PDF export instead.");
     } finally {
-      setDocxBusy(false);
+      setDocxBusy(null);
     }
   };
 
@@ -1057,7 +1061,8 @@ function Stage7Complete({ state, set, back, restart }: { state: EngineState; set
       <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-2">
         <Button variant="accent" onClick={() => printPdf("canvas")}><Download /> Download Canvas (Landscape PDF)</Button>
         <Button variant="default" onClick={() => printPdf("summary")}><Download /> Download Summary (Portrait PDF)</Button>
-        <Button variant="outline" onClick={downloadDocx} disabled={docxBusy}><FileText /> {docxBusy ? "Preparing…" : "Download Canvas (Editable .docx)"}</Button>
+        <Button variant="outline" onClick={() => downloadDocx("visual")} disabled={docxBusy !== null}><FileText /> {docxBusy === "visual" ? "Preparing…" : "Canvas (.docx — Landscape Visual)"}</Button>
+        <Button variant="outline" onClick={() => downloadDocx("editable")} disabled={docxBusy !== null}><FileText /> {docxBusy === "editable" ? "Preparing…" : "Canvas (.docx — Editable Sequential)"}</Button>
       </div>
       <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2">
         <Button variant="outline" onClick={exportCsv}><FileText /> Export Revenue Model (CSV)</Button>
