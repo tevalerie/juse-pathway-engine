@@ -197,10 +197,11 @@ export function PrintCanvas({ state }: { state: EngineState }) {
       {/* Footer (sits at the bottom of page 2) */}
       <div className="pc-footer">
         <div>
-          Adapted from Alex Osterwalder & Yves Pigneur's Business Model Canvas, Ingrid Burkett's
-          Knode Social Enterprise Canvas (2010), and Wilson et al. (2009). Prepared by the
-          Sustainable Financing Mechanism Team led by Audrey Richards (Edge Catalyst Finance LLP)
-          for EFJ-J-USE, in partnership with funding support from Canada.
+          Adapted by T. Valerie Onu's Sustainable Financing Mechanism for Nature-based Climate
+          Solutions (NbCS), from Alex Osterwalder & Yves Pigneur's Business Model Canvas, Ingrid
+          Burkett's Knode Social Enterprise Canvas (2010), and Wilson et al. (2009). Prepared for
+          EFJ-J-USE, in partnership with funding support from Canada under the by the SFM Specialist
+          Engagement led by Audrey Richards (Edge Catalyst Finance)
         </div>
         <div className="pc-footer-right">
           {pw.shortLabel} pathway · Generated {new Date().toLocaleDateString("en-JM")}
