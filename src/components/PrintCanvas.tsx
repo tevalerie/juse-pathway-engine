@@ -200,7 +200,7 @@ export function PrintCanvas({ state }: { state: EngineState }) {
           Adapted from Alex Osterwalder & Yves Pigneur's Business Model Canvas, Ingrid Burkett's
           Knode Social Enterprise Canvas (2010), and Wilson et al. (2009). Prepared by the
           Sustainable Financing Mechanism Team led by Audrey Richards (Edge Catalyst Finance LLP)
-          for the Environmental Foundation of Jamaica.
+          for EFJ-J-USE, in partnership with funding support from Canada.
         </div>
         <div className="pc-footer-right">
           {pw.shortLabel} pathway · Generated {new Date().toLocaleDateString("en-JM")}
