@@ -241,11 +241,21 @@
   .pc-logo-img {
     /* Landscape canvas — source PNG is 8000×4500 (16:9 aspect).         */
     /* max-height is the binding constraint; width auto-scales.          */
-    /* 95pt tall → ~169pt wide (~60mm × 34mm). Readable lockup.          */
-    max-height: 95pt;
-    max-width: 70%;
+    /* 65pt tall → ~115pt wide. Tighter than original 95pt to free up    */
+    /* page-1 vertical budget for the longer credit subtitle (added Jun  */
+    /* 2026). With 95pt + the new subtitle, the page-1 grid was pushed   */
+    /* to page 2; 65pt keeps everything on one page. Mirrors the values  */
+    /* in canvas-styles.css used by the static worked-example PDFs.     */
+    max-height: 65pt;
+    max-width: 55%;
     width: auto;
     height: auto;
+  }
+  /* PrintCanvas logo band: tighter margins than the portrait summary    */
+  /* shares with .ps-logo-band above (which still uses the looser 5pt).  */
+  .pc-logo-band {
+    margin: 0 0 2pt;
+    padding-bottom: 2pt;
   }
   .ps-logo-img {
     /* Portrait summary — more vertical room available.                  */
@@ -292,15 +302,16 @@
     margin-top: 1pt;
   }
   .pc-subtitle {
-    font-size: 8pt;
+    font-size: 6.5pt;
     color: var(--juse-blue);
     font-style: italic;
-    margin-bottom: 6pt;
+    margin-bottom: 4pt;
+    line-height: 1.3;
   }
   .pc-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    grid-auto-rows: 370pt; /* page-1 budget: fits under ~162pt of header   */
+    grid-auto-rows: 360pt; /* page-1 budget: fits under tighter logo+sub    */
     gap: 4pt;
     /* NOTE: do NOT set break-inside: avoid here — it makes Chrome push the
        entire grid to page 2 if it thinks total height might exceed page 1

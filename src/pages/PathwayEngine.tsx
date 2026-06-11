@@ -317,7 +317,12 @@ function Stage2Pathway({ state, set, next, back }: { state: EngineState; set: (u
 // The text is intentionally honest: people can keep typing past 100% — the
 // useOverflowFit hook will save them — but they're shown the cliff.
 function CharBudget({ value, budget }: { value: string; budget: number }) {
-  const n = (value || "").trim().length;
+  const trimmed = (value || "").trim();
+  const n = trimmed.length;
+  const words = trimmed.length === 0 ? 0 : trimmed.split(/\s+/).length;
+  // Word budget = char budget ÷ avg 6 chars/word — keeps the pill scaled
+  // to the same printed-cell envelope but in the friendlier unit.
+  const wordBudget = Math.round(budget / 6);
   const pct = budget > 0 ? n / budget : 0;
   const tone =
     pct >= 1 ? "text-rose-700 bg-rose-50 border-rose-200" :
@@ -329,7 +334,7 @@ function CharBudget({ value, budget }: { value: string; budget: number }) {
     "fits comfortably";
   return (
     <div className={`mt-1.5 text-[10px] flex items-center justify-between border rounded px-1.5 py-0.5 ${tone}`}>
-      <span className="font-mono">{n} / {budget} chars</span>
+      <span className="font-mono">{words} / {wordBudget} words · {n} / {budget} chars</span>
       <span className="italic">{hint}</span>
     </div>
   );
