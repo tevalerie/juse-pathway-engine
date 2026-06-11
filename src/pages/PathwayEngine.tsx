@@ -316,7 +316,7 @@ function Stage2Pathway({ state, set, next, back }: { state: EngineState; set: (u
 // amber ("getting tight"); 100%+ red ("Canvas auto-shrinks font at print").
 // The text is intentionally honest: people can keep typing past 100% — the
 // useOverflowFit hook will save them — but they're shown the cliff.
-function CharBudget({ value, budget }: { value: string; budget: number }) {
+function CharBudget({ value, budget, printReady }: { value: string; budget: number; printReady: boolean }) {
   const trimmed = (value || "").trim();
   const n = trimmed.length;
   const words = trimmed.length === 0 ? 0 : trimmed.split(/\s+/).length;
@@ -324,18 +324,56 @@ function CharBudget({ value, budget }: { value: string; budget: number }) {
   // to the same printed-cell envelope but in the friendlier unit.
   const wordBudget = Math.round(budget / 6);
   const pct = budget > 0 ? n / budget : 0;
-  const tone =
-    pct >= 1 ? "text-rose-700 bg-rose-50 border-rose-200" :
-    pct >= 0.8 ? "text-amber-700 bg-amber-50 border-amber-200" :
-    "text-muted-foreground bg-slate-50 border-slate-200";
-  const hint =
-    pct >= 1 ? "auto-shrinks at print" :
-    pct >= 0.8 ? "getting tight" :
-    "fits comfortably";
+  // When the applicant has switched to Unrestricted mode, the pill still
+  // shows counts (transparency) but the tone goes muted and the hint
+  // changes — no amber/red, no "auto-shrinks" cliff warning.
+  const tone = !printReady
+    ? "text-muted-foreground bg-slate-50 border-slate-200"
+    : pct >= 1 ? "text-rose-700 bg-rose-50 border-rose-200"
+    : pct >= 0.8 ? "text-amber-700 bg-amber-50 border-amber-200"
+    : "text-muted-foreground bg-slate-50 border-slate-200";
+  const hint = !printReady
+    ? "unrestricted mode · counts shown for reference"
+    : pct >= 1 ? "auto-shrinks at print"
+    : pct >= 0.8 ? "getting tight"
+    : "fits comfortably";
   return (
     <div className={`mt-1.5 text-[10px] flex items-center justify-between border rounded px-1.5 py-0.5 ${tone}`}>
       <span className="font-mono">{words} / {wordBudget} words · {n} / {budget} chars</span>
       <span className="italic">{hint}</span>
+    </div>
+  );
+}
+
+// Stage-3 mode toggle. Print-ready (default) enforces word budgets so the
+// printed Canvas always fits on 2 pages; Unrestricted lets the applicant
+// type freely, acknowledging that the PDF may need extra pages or that the
+// useOverflowFit auto-shrink will reduce legibility.
+function PrintReadyToggle({ printReady, onChange }: { printReady: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <div className="mb-6 rounded-lg border border-slate-200 bg-white px-3 py-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs">
+      <span className="font-semibold uppercase tracking-wide text-slate-700">Word-count guidance</span>
+      <div className="flex gap-1">
+        <button
+          type="button"
+          onClick={() => onChange(true)}
+          className={`px-3 py-1 rounded-md transition-colors ${printReady ? "bg-[color:var(--juse-green)] text-white font-semibold" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}
+        >
+          Print-ready (recommended)
+        </button>
+        <button
+          type="button"
+          onClick={() => onChange(false)}
+          className={`px-3 py-1 rounded-md transition-colors ${!printReady ? "bg-[color:var(--juse-orange)] text-white font-semibold" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}
+        >
+          Unrestricted
+        </button>
+      </div>
+      <span className="text-slate-600 italic ml-0 sm:ml-auto">
+        {printReady
+          ? "PDF will fit cleanly on 2 pages, like the worked examples."
+          : "Type as much as you want — PDF may need extra pages or text will be auto-shrunk to fit."}
+      </span>
     </div>
   );
 }
@@ -390,6 +428,12 @@ function Stage3Canvas({ state, set, next, back }: { state: EngineState; set: (u:
         </div>
       </header>
 
+      {/* Mode toggle — Print-ready (default) vs Unrestricted */}
+      <PrintReadyToggle
+        printReady={state.printReadyMode}
+        onChange={(v) => set({ printReadyMode: v })}
+      />
+
       {/* Knode traps for this pathway */}
       {traps.length > 0 && (
         <div className="mb-6 grid md:grid-cols-3 gap-3">
@@ -439,7 +483,7 @@ function Stage3Canvas({ state, set, next, back }: { state: EngineState; set: (u:
                       placeholder={prompts.topLayer.placeholder}
                       className="mt-3 min-h-[100px]"
                     />
-                    <CharBudget value={data.topLayer} budget={b.charBudget.topLayer} />
+                    <CharBudget value={data.topLayer} budget={b.charBudget.topLayer} printReady={state.printReadyMode} />
                   </div>
 
                   {/* Impact layer */}
@@ -460,7 +504,7 @@ function Stage3Canvas({ state, set, next, back }: { state: EngineState; set: (u:
                       placeholder={prompts.impact.placeholder}
                       className="mt-3 min-h-[100px]"
                     />
-                    <CharBudget value={data.impact} budget={b.charBudget.impact} />
+                    <CharBudget value={data.impact} budget={b.charBudget.impact} printReady={state.printReadyMode} />
                   </div>
                 </div>
               </CardContent>
@@ -932,6 +976,22 @@ function Stage7Complete({ state, set, back, restart }: { state: EngineState; set
     setTimeout(() => window.print(), 150);
   };
 
+  // Editable Word (.docx) export of the populated Canvas. The docx library is
+  // ~200 kB so it loads lazily — first click pays a small one-time cost.
+  const [docxBusy, setDocxBusy] = useState(false);
+  const downloadDocx = async () => {
+    setDocxBusy(true);
+    try {
+      const { downloadCanvasDocx } = await import("@/lib/buildDocx");
+      await downloadCanvasDocx(state);
+    } catch (err) {
+      console.error("Canvas .docx export failed:", err);
+      window.alert("Sorry — the Word export failed. Please try again, or use the PDF export instead.");
+    } finally {
+      setDocxBusy(false);
+    }
+  };
+
   const shareWhatsApp = () => {
     const text = `J-USE Pathway Engine — ${state.orgName}\n` +
       `Ref: ${state.refNumber}\n` +
@@ -997,6 +1057,7 @@ function Stage7Complete({ state, set, back, restart }: { state: EngineState; set
       <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-2">
         <Button variant="accent" onClick={() => printPdf("canvas")}><Download /> Download Canvas (Landscape PDF)</Button>
         <Button variant="default" onClick={() => printPdf("summary")}><Download /> Download Summary (Portrait PDF)</Button>
+        <Button variant="outline" onClick={downloadDocx} disabled={docxBusy}><FileText /> {docxBusy ? "Preparing…" : "Download Canvas (Editable .docx)"}</Button>
       </div>
       <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2">
         <Button variant="outline" onClick={exportCsv}><FileText /> Export Revenue Model (CSV)</Button>

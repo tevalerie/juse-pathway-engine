@@ -72,6 +72,13 @@ export type EngineState = {
   reflection: string;
   commitments: { i: number; will: string; by: string; firstAction: string }[];
   stage: number;
+  // Word-count guidance mode (Stage 3 toggle).
+  //   true  = Print-ready: budgets are enforced (amber at 80%, red at 100%);
+  //           PrintCanvas fits cleanly on 2 pages; auto-shrinks any overflow.
+  //   false = Unrestricted: pill counts shown but no warning tone; applicants
+  //           can type freely with the understanding that the PDF may need
+  //           additional pages or that auto-shrink will reduce legibility.
+  printReadyMode: boolean;
 };
 
 export const EMPTY_STATE: EngineState = {
@@ -89,4 +96,5 @@ export const EMPTY_STATE: EngineState = {
     { i: 3, will: "", by: "", firstAction: "" },
   ],
   stage: 1,
+  printReadyMode: true,
 };
